@@ -1,138 +1,89 @@
-# Real-Time Fraud & Anomaly Detection Dashboard
+# 🚨 Risk Radar — Real-Time Fraud & Anomaly Detection Dashboard
 
-**Risk Radar** — a production-style portfolio case study for real-time fraud and anomaly detection.
+**A real-time transaction monitoring and anomaly detection platform built with React, FastAPI, Python, SQLite, and Machine Learning.**
 
-## Short description
+[![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Python](https://img.shields.io/badge/Backend-Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Machine Learning](https://img.shields.io/badge/ML-Anomaly%20Detection-orange)](#machine-learning)
+[![Database](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 
-A full-stack risk operations console that streams live events over WebSockets, scores anomalies with machine learning and business rules, opens investigation alerts, and generates AI-assisted explanations for analysts.
+## 🔗 Project Links
 
-## Problem
+- **GitHub Repository:** https://github.com/pawankumargupta9142-glitch/real-time-anomaly-detection-dashboard
+- **Local Application:** http://127.0.0.1:5181
+- **Local API:** http://127.0.0.1:8000
+- **API Documentation:** http://127.0.0.1:8000/docs
 
-Businesses need to monitor transactions, user activity, payments, logins, API requests, and system events in real time. Manual monitoring is slow and unreliable.
+> The application links above are for local development. A publicly hosted demo is not configured by this README.
 
-## Solution
+## 📌 Overview
 
-This app detects abnormal activity automatically, assigns risk scores, creates alerts, explains anomalies in plain English, and helps teams respond faster through live dashboards, timelines, user risk profiles, analytics, and exportable reports.
+Risk Radar is a transaction monitoring dashboard designed to identify unusual activity using machine-learning-based anomaly detection.
 
-## Business value
+The platform combines a web dashboard, a Python API, a transaction-processing pipeline, and a live event stream to help users inspect events, review risk scores, and investigate potentially suspicious activity.
 
-Real-Time Fraud & Anomaly Detection Dashboard helps businesses detect suspicious activity faster by monitoring transactions, login attempts, payments, API requests, and system events in real time. It combines machine learning, rules-based risk scoring, alerts, WebSocket live updates, and AI-generated explanations to help teams investigate anomalies and reduce operational risk.
+The project is intended for educational purposes, demonstrations, and further development of fraud and anomaly monitoring systems.
 
-## Use cases
+## ✨ Features
 
-| Team | How Risk Radar helps |
-| --- | --- |
-| **Fintech / banking** | Monitor high-value transfers, impossible travel logins, and account takeover patterns |
-| **SaaS trust & safety** | Detect API abuse, credential stuffing, and suspicious account changes |
-| **Ecommerce** | Flag unusual payments, shipping/geo mismatches, and repeated payment failures |
-| **Cybersecurity SOC** | Stream events into an investigation console with severity-based alert queues |
-| **Payment operations** | Hold settlement candidates, review instrument risk, and export audit reports |
-| **Platform / ops** | Watch traffic spikes, system anomalies, and model threshold health |
+- **Interactive Dashboard:** Monitor transaction activity and risk-related metrics.
+- **Live Event Monitoring:** View incoming events using WebSocket communication.
+- **Event Timeline:** Search, filter, and inspect transaction and system events.
+- **CSV Transaction Import:** Upload supported transaction CSV files for analysis.
+- **Anomaly Detection:** Use the existing machine-learning model to score events.
+- **Risk Classification:** Display risk scores and risk levels.
+- **Alerts:** Review events that meet the application's configured alert rules.
+- **Analytics:** Explore transaction activity and anomaly trends.
+- **REST API:** Communicate between the React frontend and FastAPI backend.
+- **Local Persistence:** Store application data using SQLite.
 
-## Key features
+Feature availability and results depend on the current application configuration and successful backend execution.
 
-- Landing page with Risk Radar brand identity
-- Real-time operations dashboard
-- WebSocket live event stream + reconnect status
-- Background event simulator (start/stop from UI)
-- Isolation Forest anomaly detection + rule engine
-- Risk scores (1–100) with Low / Medium / High / Critical levels
-- Alert investigation workflow + analyst notes
-- AI explanations with OpenAI-compatible API or mock fallback
-- Event timeline, user risk profiles, analytics, reports (CSV/JSON)
-- Model monitoring + synthetic retrain
-- Settings for thresholds and simulation tuning
-- Optional Docker Compose (frontend, backend, PostgreSQL)
+## 🛠️ Technology Stack
 
-## Real-time event streaming workflow
+| Component | Technology |
+|---|---|
+| Frontend | React, JavaScript, Vite |
+| Backend | Python, FastAPI |
+| Machine Learning | Existing anomaly-detection model |
+| Database | SQLite |
+| Real-time Communication | WebSocket |
+| API Communication | REST API |
+| Testing | Python unittest, frontend production build |
+| Version Control | Git and GitHub |
 
-1. Analyst starts the simulator (or production ingest posts events).
-2. Backend analyzes each event (features → ML → rules → risk score).
-3. Event is persisted to PostgreSQL/SQLite and broadcast on `/ws/events`.
-4. Frontend live monitor / dashboard updates instantly.
-5. High/Critical events create alerts and toast notifications.
-
-## ML anomaly detection workflow
-
-1. Feature engineering extracts amount, velocity, geo/device change, IP patterns, API volume, etc.
-2. Isolation Forest scores anomaly likelihood.
-3. Rule triggers add explainable business-risk points.
-4. Combined risk score classifies severity and recommended action.
-
-## Risk scoring workflow
-
-`ML anomaly score` + weighted rule triggers → clamped score `1–100` → risk level → recommended action → optional alert.
-
-## AI explanation workflow
-
-1. For an event, backend builds an investigation brief.
-2. If `OPENAI_API_KEY` exists, an OpenAI-compatible chat completion is used.
-3. Otherwise a realistic mock explanation is returned.
-4. Content stays defensive: investigation and prevention only.
-
-## Tech stack
-
-| Layer | Stack |
-| --- | --- |
-| Frontend | React, Vite, Tailwind CSS, Axios, React Router, Recharts, WebSocket |
-| Backend | FastAPI, SQLAlchemy, Pydantic, WebSockets |
-| Data | PostgreSQL (Docker) or SQLite (local demo) |
-| ML | Scikit-learn Isolation Forest, Pandas/NumPy |
-| AI | OpenAI-compatible API + mock fallback |
-
-## Architecture
+## 🏗️ Architecture
 
 ```text
-[Event Simulator / Ingest]
-          |
-          v
-   [FastAPI Services]
-     | features | ML | rules | alerts | AI explanations
-          |
-   +------+------+
-   | PostgreSQL  |<---- seed / reports / profiles
-   +------+------+
-          |
-   [WebSocket /ws/events]
-          |
-   [React Risk Radar Console]
+                 User
+                  |
+                  v
+        React + Vite Frontend
+                  |
+          REST API / WebSocket
+                  |
+                  v
+           FastAPI Backend
+                  |
+          +-------+--------+
+          |                |
+          v                v
+    CSV Processing    Event Simulator
+          |                |
+          +-------+--------+
+                  |
+                  v
+          ML Anomaly Detection
+                  |
+                  v
+            SQLite Database
+                  |
+                  v
+      Events, Alerts, Analytics
 ```
 
-## Screenshots
-
-### Landing
-
-![Risk Radar landing page](docs/screenshots/01-landing.png)
-
-### Operations dashboard
-
-![Operations dashboard with live risk metrics and charts](docs/screenshots/02-dashboard.png)
-
-### Live monitor
-
-![Live event stream monitor](docs/screenshots/03-live-monitor.png)
-
-### Event timeline
-
-![Filterable event timeline](docs/screenshots/04-events.png)
-
-### Alert queue
-
-![Alert investigation queue](docs/screenshots/05-alerts.png)
-
-### Analytics
-
-![Analytics charts for anomalies and risk](docs/screenshots/06-analytics.png)
-
-### Model monitoring
-
-![Isolation Forest model monitoring](docs/screenshots/07-model.png)
-
-### Event details + investigation brief
-
-![Event details with AI investigation brief](docs/screenshots/08-event-details.png)
-
-## Folder structure
+## 📂 Project Structure
 
 ```text
 real-time-anomaly-detection-dashboard/
@@ -142,144 +93,193 @@ real-time-anomaly-detection-dashboard/
 │   ├── database.py
 │   ├── models.py
 │   ├── schemas.py
-│   ├── seed.py
-│   ├── requirements.txt
 │   ├── routes/
 │   ├── services/
-│   └── utils/
+│   ├── tests/
+│   ├── models_store/
+│   ├── requirements.txt
+│   └── .env.example
 ├── frontend/
 │   ├── src/
 │   │   ├── api/
 │   │   ├── components/
+│   │   ├── context/
 │   │   ├── pages/
 │   │   └── utils/
-│   └── package.json
+│   ├── package.json
+│   └── .env.example
 ├── docs/
-│   └── screenshots/
+├── .gitignore
 ├── docker-compose.yml
+├── Dockerfile
+├── LICENSE
 └── README.md
 ```
 
-## Setup instructions
+Some filenames or folders may vary depending on the current project version.
+
+## ⚙️ Installation and Setup
 
 ### Prerequisites
 
-- Python 3.11+
-- Node.js 20+
-- Optional: Docker Desktop
+Install the following:
 
-### Backend (SQLite demo — fastest)
+- Python 3.12 or another version supported by the project's dependencies
+- Node.js and npm
+- Git
+- Visual Studio Code (recommended)
+
+### 1. Clone the repository
 
 ```bash
+git clone https://github.com/pawankumargupta9142-glitch/real-time-anomaly-detection-dashboard.git
+cd real-time-anomaly-detection-dashboard
+```
+
+### 2. Set up the backend
+
+Open a terminal in the project root.
+
+**Windows PowerShell:**
+
+```powershell
 cd backend
 python -m venv .venv
-
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
-
-# macOS/Linux
-# source .venv/bin/activate
-
-pip install -r requirements.txt
-copy .env.example .env   # or: cp .env.example .env
-python seed.py
-uvicorn main:app --reload --port 8000
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
 
-If port `8000` is already in use on your machine, start on another port (for example `8800`) and set matching values in `frontend/.env`:
+Configure environment variables using the project's `.env.example` as a guide. Create a local `.env` file if required by the application. Never commit actual secrets.
 
-```bash
-VITE_API_BASE=http://127.0.0.1:8800
-VITE_WS_BASE=ws://127.0.0.1:8800
+Start FastAPI:
+
+```powershell
+python -m uvicorn main:app --reload --port 8000
 ```
 
-### Frontend
+Backend API:
 
-```bash
+- API: http://127.0.0.1:8000
+- Swagger documentation: http://127.0.0.1:8000/docs
+
+### 3. Set up the frontend
+
+Open a second terminal:
+
+```powershell
 cd frontend
 npm install
-# optional: copy .env.example to .env and adjust API/WS URLs
+```
+
+Configure the frontend environment variables according to `frontend/.env.example`, if required. Set the API and WebSocket URLs to match the backend configuration.
+
+Start Vite:
+
+```powershell
 npm run dev
 ```
 
-Open:
-- App: http://localhost:5173
-- API docs: http://localhost:8000/docs (or your chosen backend port)
+Open the exact local URL printed by Vite. The development port may vary if the default port is unavailable.
 
-### Docker (PostgreSQL)
+## 📊 CSV Transaction Import
 
-```bash
-docker compose up --build
+The Events page provides a CSV import interface for supported transaction formats.
+
+### Risk Radar CSV format
+
+```csv
+event_type,user_id,amount
+Payment,USR-0001,250.50
+Transaction,USR-0002,1200.00
+Payment,USR-0003,75.25
 ```
 
-Then seed runs automatically in the backend container on start.
+### Import workflow
 
-## Environment variables
+1. Open the Events page.
+2. Select a supported CSV file.
+3. Click **Upload and analyze**.
+4. Review the import summary.
+5. Inspect analyzed events and their model-generated risk classifications.
 
-| Variable | Purpose |
-| --- | --- |
-| `DATABASE_URL` | SQLAlchemy URL (`sqlite:///./fraud_detection.db` or Postgres) |
-| `CORS_ORIGINS` | Comma-separated allowed origins |
-| `JWT_SECRET` | JWT signing secret (auth structure ready) |
-| `OPENAI_API_KEY` | Enables live AI explanations |
-| `OPENAI_BASE_URL` | OpenAI-compatible base URL |
-| `CHAT_MODEL` | Chat model name |
+The current importer is configured for a maximum file size of 10 MB and a maximum of 50,000 data rows per upload. Other validation rules and accepted event types are determined by the backend implementation.
 
-Frontend optional:
+CSV ground-truth labels, when present and supported, must remain separate from model predictions.
 
-| Variable | Purpose |
-| --- | --- |
-| `VITE_API_BASE` | API origin (default `http://127.0.0.1:8000`) |
-| `VITE_WS_BASE` | WebSocket origin (default `ws://127.0.0.1:8000`) |
+## 🤖 Machine Learning
 
-## API endpoints
+Risk Radar uses its existing anomaly-detection pipeline to analyze transaction events and identify unusual patterns.
 
-- `GET /api/dashboard/stats`
-- `GET /api/dashboard/recent-events`
-- `GET /api/dashboard/recent-alerts`
-- `WS /ws/events`
-- `GET /api/events` · `GET /api/events/{id}` · `POST /api/events/analyze`
-- `POST /api/events/import-csv` · Risk Radar or PaySim transaction CSV (`file` multipart field; 10 MB / 50,000 row limits)
-- `GET /api/alerts` · `PUT /api/alerts/{id}` · resolve / false-positive / notes
-- `POST /api/simulator/start|stop` · `GET /api/simulator/status`
-- `GET /api/analytics/*`
-- `GET|POST /api/reports` · CSV/JSON export
-- `GET /api/users/risk-profiles`
-- `GET /api/model/status` · `POST /api/model/train`
-- `GET|PUT /api/settings`
+The dashboard can display model-generated risk scores and anomaly classifications to support investigation.
 
-## Demo workflow
+**Important limitations:**
 
-1. Seed the database (`python seed.py`).
-2. Start backend + frontend.
-3. Open **Live Monitor** and click **Start stream**.
-4. Watch anomalies appear; high-risk alerts toast in the UI.
-5. Open an event → review AI investigation brief.
-6. Update alert status, add analyst notes.
-7. Generate a report and export CSV/JSON.
-8. Retrain the Isolation Forest on the Model page.
+- An anomaly is not necessarily fraud.
+- Synthetic data is not equivalent to real banking data.
+- Risk scores should not be interpreted as calibrated fraud probabilities unless calibration has been evaluated.
+- Model quality should be assessed with an appropriate test dataset and metrics such as precision, recall, F1-score, and false-positive rate when ground-truth labels are available.
 
-On the Events page, upload a `.csv` using either the Risk Radar columns `event_type,user_id,amount` or PaySim columns `type,amount,nameOrig`. PaySim `isFraud` and `isFlaggedFraud` values are stored as dataset metadata after model inference and are not used as prediction inputs. Import summaries distinguish analyzed, rejected, and model-flagged anomaly rows.
+## 🧪 Testing
 
-Demo admin (JWT structure): `admin` / `admin123`
+### Backend tests
 
-## Future improvements
+From the project root:
 
-- Real payment processor integration (Stripe/Adyen webhooks)
-- Kafka (or similar) event streaming for high-volume ingest
-- Redis caching for dashboard aggregates and session risk context
-- SIEM integration (Splunk / Elastic / Sentinel export)
-- Email / SMS alert notifications for critical severity
-- Role-based access control and SSO for analyst roles
-- Model drift monitoring and scheduled recalibration jobs
-- Production deployment (containers, managed Postgres, CDN frontend)
-- XGBoost classifier alongside Isolation Forest
-- Native PDF report rendering
+```powershell
+cd backend
+python -m unittest discover -s tests -v
+```
 
-## Security note
+Run tests in the project's configured Python environment.
 
-This system is for **defensive monitoring and investigation only**. It does not provide guidance for committing fraud or bypassing detection controls.
+### Frontend production build
 
-## License
+From the project root:
 
-This project is licensed under the [MIT License](LICENSE). Copyright (c) 2026 Asif Fiaz.
+```powershell
+npm run build --prefix frontend
+```
+
+### Git whitespace check
+
+```bash
+git diff --check
+```
+
+Record the latest test results before presenting or releasing a new version.
+
+## 🔒 Security Notes
+
+- Keep API keys, passwords, and private environment variables out of GitHub.
+- Do not commit local databases containing private or sensitive records.
+- Validate CSV uploads before processing.
+- Protect database writes against partial failures.
+- Apply authentication and authorization to protected endpoints where required.
+- Use HTTPS and appropriate production configuration before public deployment.
+
+## 🚀 Future Improvements
+
+- Improve model evaluation with documented benchmark results.
+- Add transaction investigation details and explainable anomaly indicators.
+- Improve CSV import reporting and duplicate-import protection.
+- Add exportable analytics and reports.
+- Add role-based access control and audit trails.
+- Add production deployment, monitoring, and automated CI tests.
+
+## 🎓 Project Purpose
+
+Risk Radar is a learning and demonstration project exploring real-time event monitoring, transaction analysis, REST APIs, WebSockets, database persistence, and machine-learning-based anomaly detection.
+
+It is not a certified banking fraud-prevention system.
+
+## 👨‍💻 Repository
+
+Explore the source code, review the implementation, and follow future improvements:
+
+**[Open Risk Radar on GitHub](https://github.com/pawankumargupta9142-glitch/real-time-anomaly-detection-dashboard)**
+
+If you find the project useful, consider starring the repository.
+
+---
+
+**Built with React, Python, FastAPI, SQLite, and Machine Learning.**
